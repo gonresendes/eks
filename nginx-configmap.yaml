@@ -53,11 +53,9 @@ data:
     }
 
     server {
-        listen 443 ssl;
+        listen 443;
         server_name cert.resendes.cloudns.be;
 
-        ssl_certificate /etc/nginx/certs/tls.crt;
-        ssl_certificate_key /etc/nginx/certs/tls.key;
 
         location / {
             proxy_pass https://ejbca-service.default.svc.cluster.local:8443/ejbca/adminweb;
