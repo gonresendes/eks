@@ -21,11 +21,16 @@ spec:
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx/conf.d
+        - name: resendes-tls
+          mountPath: /etc/ssl/certs
+          readOnly: true
       volumes:
       - name: nginx-config
         configMap:
           name: nginx-config
-
+      - name: resendes-tls
+        secret:
+          secretName: resendes-tls
 ---
 apiVersion: v1
 kind: Service
@@ -46,4 +51,3 @@ spec:
       targetPort: 443
       nodePort: 30443
   type: LoadBalancer
-  
