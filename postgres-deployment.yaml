@@ -1,3 +1,4 @@
+# postgres-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,21 +15,49 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:latest
+        image: postgres:13
         env:
-          - name: POSTGRES_DB
-            value: plik_db
-          - name: POSTGRES_USER
-            value: plik_user
-          - name: POSTGRES_PASSWORD
-            value: Passw0rd
+        - name: POSTGRES_DB
+          value: defaultdb
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres_password
         ports:
-          - containerPort: 5432
+        - containerPort: 5432
+        volumeMounts:
+        - name: init-db
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-db
+        configMap:
+          name: postgres-init-scripts
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-scripts
+data:
+  init.sql: |
+    CREATE DATABASE ejbca;
+    CREATE DATABASE plik;
+    CREATE DATABASE wiki;
+    CREATE DATABASE onetimesecret;
+    CREATE USER ejbca_user WITH ENCRYPTED PASSWORD 'ejbca_password';
+    CREATE USER plik_user WITH ENCRYPTED PASSWORD 'plik_password';
+    CREATE USER wikijs_user WITH ENCRYPTED PASSWORD 'wiki_password';
+    CREATE USER onetime_user WITH ENCRYPTED PASSWORD 'onetimesecret_password';
+    GRANT ALL PRIVILEGES ON DATABASE ejbca TO ejbca_user;
+    GRANT ALL PRIVILEGES ON DATABASE plik TO plik_user;
+    GRANT ALL PRIVILEGES ON DATABASE wikijs TO wiki_user;
+    GRANT ALL PRIVILEGES ON DATABASE onetime TO onetimesecret_user;
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: postgres
 spec:
   selector:
     app: postgres
