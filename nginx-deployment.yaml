@@ -18,6 +18,7 @@ spec:
         ports:
         - containerPort: 80
         - containerPort: 443
+        - containerPort: 5432
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx/conf.d
