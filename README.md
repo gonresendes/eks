@@ -36,3 +36,37 @@ Clone this repository to your local machine:
 ```sh
 git clone https://github.com/gonresendes/eks.git
 cd eks
+```
+
+## Configure Nginx
+
+Update the Nginx configuration to point to your SSL certificates. Ensure your certificates are located in /home/ec2-user/certs/ or update the path accordingly in the ConfigMap.
+Create Secrets
+
+Create Kubernetes secrets for your SSL certificates:
+
+```
+kubectl create secret tls resendes-tls --cert=/home/ec2-user/certs/fullchain1.pem --key=/home/ec2-user/certs/privkey1.pem
+```
+
+## Deploy
+
+Deploy the Nginx proxy and your applications using the provided Kubernetes manifests:
+
+
+```
+kubectl apply -f nginx-configmap.yaml
+kubectl apply -f nginx-deployment.yaml
+```
+
+Ensure your applications (e.g., plik-service, wiki-service, secret-service) are deployed and running in the default namespace.
+Accessing the Applications
+
+Your applications will be accessible via the following URLs (assuming your domain is resendes.cloudns.be):
+
+    http://plik.resendes.cloudns.be (redirects to HTTPS)
+    http://wiki.resendes.cloudns.be (redirects to HTTPS)
+    http://onetimesecret.resendes.cloudns.be (redirects to HTTPS)
+    https://cert.resendes.cloudns.be/ejbca/adminweb
+
+
