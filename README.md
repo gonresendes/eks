@@ -55,8 +55,8 @@ Deploy the Nginx proxy and your applications using the provided Kubernetes manif
 
 
 ```
+kubectl apply -f nginx-configmap.yaml
 kubectl apply -f nginx-deployment.yaml
-kubectl apply -f nginx-service.yaml
 ```
 
 Ensure your applications (e.g., plik-service, wiki-service, secret-service) are deployed and running in the default namespace.
